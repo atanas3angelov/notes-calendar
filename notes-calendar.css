@@ -1,4 +1,4 @@
-div#notes-calendar * {
+#notes-calendar * {
     border-collapse: collapse;
     td,
     th {
@@ -9,10 +9,64 @@ div#notes-calendar * {
 
     th {
         font-weight: bold;
-        background-color: #E6E6E6;
+        background-color: #e6e6e6;
     }
 
     .wk {
         color: gray
     }
+
+    .noted {
+        background-color: #ccc;
+    }
+
+    .selected-day {
+        background-color: aqua;
+    }
+}
+
+#notes-calendar-menu {
+    width: 260px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+}
+#notes-calendar-year,
+#notes-calendar-month {
+    width: 130px;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+}
+
+#note-board {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+}
+
+#note-board input {
+    width: 260px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    vertical-align: middle;
+    background-color: #f8f8f8;
+}
+
+#note-board-info-button,
+#note-board-edit-button {
+    width: 20px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+}
+
+#note-board-details {
+    width: 100%;
+    height: 150px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    resize: none;
 }

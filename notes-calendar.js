@@ -83,7 +83,7 @@ class NotesCalendar {
 
         if (notes[d.getDate()]) {
           td.classList.add('noted');
-          td.title = notes[d.getDate()][0].join(', ');
+          td.title = notes[d.getDate()].summary.join(', ');
         }
 
         td.textContent = d.getDate();
@@ -157,8 +157,8 @@ class NotesCalendar {
     this.noteboardDay = day;
 
     if (this.notes[day]) {
-      this.summary.value = this.notes[day][0].join(', ');
-      this.details.value = this.notes[day][1];
+      this.summary.value = this.notes[day].summary.join(', ');
+      this.details.value = this.notes[day].details;
     }
     else {
       this.summary.value = '';
@@ -188,7 +188,7 @@ class NotesCalendar {
 
   saveNote(year, month, day, summary, details) {
 
-    notes[day] = [summary, details];
+    notes[day] = {summary: summary, details: details};
 
     if (summary.join(', ') == '' && details == '') {
       this.selectedCell.classList.remove('noted');
@@ -212,22 +212,20 @@ window.onload = function() {
   
   // notes depicting revision/learning of a skill (e.g. Golang)
   notes = {
-    /* day number: [['tag/summary 1', 'tag/summary 2'...], 'details as text'] */
-    3:  [['go'], 'A Tour of Go: variables & functions'],
-    4:  [['go'], 'A Tour of Go: flow control - for'],
-    5:  [['go', 'python'], 'A Tour of Go: flow control - if, else, switch, defer\n' + 
-                            'python - enumerate\n' + 
-                            'c# closures\n' + 
-                            'java enhanced for loop'],
-    6:  [['go'], 'A Tour of Go: structs'],
-    10: [['go'], 'A Tour of Go: slices and maps'],
-    11: [['go'], 'A Tour of Go: exercise'],
-    12: [['go'], ''],
-    17: [['go'], ''],
-    18: [['go'], 'A Tour of Go: '],
-    20: [['js', 'css', 'html'], 'creating a calendar with js'],
-    25: [['css'], 'css universal selector and combinators'],
-    26: [['js, html'], 'figuring out how to display notes for the note calendar project']
+  /*  format:
+      day number: { summary: ["tag 1", "tag 2"...], details: "details text" } */
+    3:  {summary: ["go"], details: "A Tour of Go: variables & functions"},
+    4:  {summary: ["go"], details: "A Tour of Go: flow control - for"},
+    5:  {summary: ["go", "python"], details: "A Tour of Go: flow control - if, else, switch, defer\n python - enumerate\nc# closures\njava enhanced for loop"},
+    6:  {summary: ["go"], details: "A Tour of Go: structs"},
+    10: {summary: ["go"], details: "A Tour of Go: slices and maps"},
+    11: {summary: ["go"], details: "A Tour of Go: exercise"},
+    12: {summary: ["go"], details: ""},
+    17: {summary: ["go"], details: ""},
+    18: {summary: ["go"], details: "A Tour of Go: "},
+    20: {summary: ["js", "css", "html"], details: "creating a calendar with js"},
+    25: {summary: ["css"], details: "css universal selector and combinators"},
+    26: {summary: ["js", "html"], details: "figuring out how to display notes for the note calendar project"}
   }  // data to be collected from a database with a backend call
 
   const notesCalendar = new NotesCalendar('notes-calendar', 2025, 12, notes);
@@ -235,7 +233,7 @@ window.onload = function() {
   notesCalendar.createNoteBoard('note-board');
 
   const callbackSave = (year, month, day, summary, details) => {
-    notes[day] = [[summary], details];
+    notes[day] = {summary: [summary], details: details};
     console.log(notes);
   };
 

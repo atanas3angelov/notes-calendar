@@ -188,11 +188,11 @@ class NotesCalendar {
 
   saveNote(year, month, day, summary, details) {
 
-    notes[day] = {summary: summary, details: details};
+    this.notes[day] = {summary: summary, details: details};
 
     if (summary.join(', ') == '' && details == '') {
       this.selectedCell.classList.remove('noted');
-      delete notes[day];
+      delete this.notes[day];
     } else {
       this.selectedCell.classList.add('noted');
     }

@@ -8,34 +8,53 @@
         <script>
             window.onload = function() {
                 
-            // notes depicting revision/learning of a skill (e.g. Golang)
-            notes = {
-            /*  format:
-                day number: { summary: ["tag 1", "tag 2"...], details: "details text" } */
-                3:  {summary: ["go"], details: "A Tour of Go: variables & functions"},
-                4:  {summary: ["go"], details: "A Tour of Go: flow control - for"},
-                5:  {summary: ["go", "python"], details: "A Tour of Go: flow control - if, else, switch, defer\n python - enumerate\nc# closures\njava enhanced for loop"},
-                6:  {summary: ["go"], details: "A Tour of Go: structs"},
-                10: {summary: ["go"], details: "A Tour of Go: slices and maps"},
-                11: {summary: ["go"], details: "A Tour of Go: exercise"},
-                12: {summary: ["go"], details: ""},
-                17: {summary: ["go"], details: ""},
-                18: {summary: ["go"], details: "A Tour of Go: "},
-                20: {summary: ["js", "css", "html"], details: "creating a calendar with js"},
-                25: {summary: ["css"], details: "css universal selector and combinators"},
-                26: {summary: ["js", "html"], details: "figuring out how to display notes for the note calendar project"}
-            }  // data to be collected from a database with a backend call
+                let notes_db = new Map();  // data representing a database
 
-            const notesCalendar = new NotesCalendar('notes-calendar', 2025, 12, notes);
+                // notes depicting revision/learning of a skill (e.g. Golang)
+                notes_db.set(id(2025, 12), {
+                /*  format:
+                    day number: { summary: ["tag 1", "tag 2"...], details: "details text" } */
+                    3:  {summary: ["go"], details: "A Tour of Go: variables & functions"},
+                    4:  {summary: ["go"], details: "A Tour of Go: flow control - for"},
+                    5:  {summary: ["go", "python"], details: "A Tour of Go: flow control - if, else, switch, defer\n python - enumerate\nc# closures\njava enhanced for loop"},
+                    6:  {summary: ["go"], details: "A Tour of Go: structs"},
+                    10: {summary: ["go"], details: "A Tour of Go: slices and maps"},
+                    11: {summary: ["go"], details: "A Tour of Go: exercise"},
+                    12: {summary: ["go"], details: ""},
+                    17: {summary: ["go"], details: ""},
+                    18: {summary: ["go"], details: "A Tour of Go: "},
+                    20: {summary: ["js", "css", "html"], details: "creating a calendar with js"},
+                    25: {summary: ["css"], details: "css universal selector and combinators"},
+                    26: {summary: ["js", "html"], details: "figuring out how to display notes for the note calendar project"}
+                });
+                
+                function id(year, month) {
+                    return year.toString() + month.toString();
+                }
 
-            notesCalendar.createNoteBoard('note-board');
+                let notes = notes_db.get( id(2025, 12) ); // data to be collected from a database with a backend call
 
-            const callbackSave = (year, month, day, summary, details) => {
-                notes[day] = {summary: [summary], details: details};
-                console.log(notes);
-            };
+                const notesCalendar = new NotesCalendar('notes-calendar', 2025, 12, notes);
 
-            notesCalendar.defineCallbackSave(callbackSave);
+                const callbackLoad = (year, month) => {
+                    if (notes_db.has( id(year, month) )) {
+                        notes = notes_db.get( id(year, month) );
+                    } else {
+                        notes_db.set( id(year, month), {} );
+                        notes = notes_db.get( id(year, month) );
+                    }
+                    
+                    notesCalendar.reloadCalendar(notes);
+                };
+                notesCalendar.defineCallbackLoad(callbackLoad);
+
+                notesCalendar.createNoteBoard('note-board');
+
+                const callbackSave = (year, month, day, summary, details) => {
+                    notes[day] = {summary: [summary], details: details};
+                    console.log(notes);
+                };
+                notesCalendar.defineCallbackSave(callbackSave);
             };
         </script>
 

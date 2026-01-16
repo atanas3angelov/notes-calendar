@@ -1,5 +1,12 @@
 class NotesCalendar {
   constructor(calendarId, year, month, notes) {
+    /**
+     * Creates the calendar object.
+     * @param {string} calendarId The uniqure html id used to position the calendar object.
+     * @param {number} year The initial year the calendar should display.
+     * @param {number} month The initial month the calendar should display.
+     * @param {Object} notes Data in format {number: {summary: Array.<string>, details: string}}.
+     */
     this.calendarDiv = document.getElementById(calendarId);
     this.year = year;
     this.month = month;
@@ -7,7 +14,6 @@ class NotesCalendar {
 
     this.calendarDiv.appendChild(this.createCalendarMenu(year, month));
     this.calendarDiv.appendChild(this.createCalendar(year, month, notes));
-
   }
 
   createCalendarMenu(year, month) {
@@ -20,15 +26,27 @@ class NotesCalendar {
     this.yearMenu.type = 'number';
     this.yearMenu.value = year;
     this.yearMenu.onchange = () => {
-      console.log('year changed to ' + this.yearMenu.value);
+      this.year = this.yearMenu.value;
+      this.loadCallback(this.year, this.month);
     };
 
     this.monthMenu = document.createElement('input');
     this.monthMenu.setAttribute('id', 'notes-calendar-month');
     this.monthMenu.type = 'number';
     this.monthMenu.value = month;
-    this.monthMenu.onchange = () => {
-      console.log('month changed to ' + this.monthMenu.value);
+    this.monthMenu.onchange = (event) => {
+      if (event.target.value > 12) {
+        this.yearMenu.value = Number(this.yearMenu.value) + 1;
+        this.year = this.yearMenu.value;
+        this.month = this.monthMenu.value = 1;
+      } else if (this.monthMenu.value < 1) {
+        this.yearMenu.value = Number(this.yearMenu.value) - 1;
+        this.year = this.yearMenu.value;
+        this.month = this.monthMenu.value = 12;
+      } else {
+        this.month = this.monthMenu.value;
+      }
+      this.loadCallback(this.year, this.month);
     };
 
     calendarMenu.append(this.yearMenu, this.monthMenu);
@@ -202,6 +220,34 @@ class NotesCalendar {
     this.saveCallback(year, month, day, summary, details);
   }
 
+  reloadCalendar(notes) {
+    /** The func is expected to be called when defining the callback to load notes 
+     * for a new year or month.
+     * @param {Object} notes Data in format {number: {summary: Array.<string>, details: string}}.
+     */
+    this.notes = notes;
+    this.calendarDiv.replaceChild(this.createCalendar(this.year, this.month, this.notes), this.calendarDiv.children[1]);
+  }
+
+  /**
+   * The func is expected to have 2 params: year, month.
+   * The year and month are expected to be numbers.
+   * The function is expected to call the calendar's object method reloadCalendar(notes),
+   *  where notes contain the day notes for that year+month in the same format 
+   *  the calendar object was created with.
+   * @param {*} func 
+   */
+  defineCallbackLoad(func) {
+    this.loadCallback = func;
+  }
+
+  /**
+   * The func is expected to have 5 params: year, month, day, summary, details.
+   * The year, month and day are expected to be numbers.
+   * The summary is expected to be an array of strings.
+   * The details is expected to be a string.
+   * @param {*} func 
+   */
   defineCallbackSave(func) {
     this.saveCallback = func;
   }

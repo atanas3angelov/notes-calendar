@@ -201,7 +201,7 @@ class NotesCalendar {
 
     const details = this.details.value;
 
-    this.saveNote(2025, 12, day, summary.split(',').map((e) => e.trim()), details);
+    this.saveNote(this.year, this.month, day, summary.split(',').map((e) => e.trim()), details);
   }
 
   saveNote(year, month, day, summary, details) {

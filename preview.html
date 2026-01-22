@@ -51,7 +51,7 @@
                 notesCalendar.createNoteBoard('note-board');
 
                 const callbackSave = (year, month, day, summary, details) => {
-                    notes[day] = {summary: [summary], details: details};
+                    notes[day] = {summary: summary, details: details};
                     console.log(notes);
                 };
                 notesCalendar.defineCallbackSave(callbackSave);

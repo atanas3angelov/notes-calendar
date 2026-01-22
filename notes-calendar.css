@@ -25,13 +25,13 @@
     }
 }
 
-#notes-calendar-menu {
+.notes-calendar-menu {
     width: 260px;
     margin-bottom: 5px;
     border: 1px solid #ccc;
 }
-#notes-calendar-year,
-#notes-calendar-month {
+.notes-calendar-year,
+.notes-calendar-month {
     width: 130px;
     box-sizing: border-box;
     background-color: #f8f8f8;
@@ -44,7 +44,7 @@
     background-color: #f8f8f8;
 }
 
-#note-board input {
+.note-board-summary {
     width: 260px;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -53,15 +53,15 @@
     background-color: #f8f8f8;
 }
 
-#note-board-info-button,
-#note-board-edit-button {
+.note-board-info-button,
+.note-board-edit-button {
     width: 20px;
     font-family: "Lucida Console", "Courier New", monospace;
     border-radius: 4px;
     background-color: #f8f8f8;
 }
 
-#note-board-details {
+.note-board-details {
     width: 100%;
     height: 150px;
     box-sizing: border-box;

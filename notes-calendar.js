@@ -19,10 +19,10 @@ class NotesCalendar {
   createCalendarMenu(year, month) {
     
     const calendarMenu = document.createElement('div');
-    calendarMenu.setAttribute('id', 'notes-calendar-menu');
+    calendarMenu.classList.add('notes-calendar-menu');
 
     this.yearMenu = document.createElement('input');
-    this.yearMenu.setAttribute('id', 'notes-calendar-year');
+    this.yearMenu.classList.add('notes-calendar-year');
     this.yearMenu.type = 'number';
     this.yearMenu.value = year;
     this.yearMenu.onchange = () => {
@@ -31,7 +31,7 @@ class NotesCalendar {
     };
 
     this.monthMenu = document.createElement('input');
-    this.monthMenu.setAttribute('id', 'notes-calendar-month');
+    this.monthMenu.classList.add('notes-calendar-month');
     this.monthMenu.type = 'number';
     this.monthMenu.value = month;
     this.monthMenu.onchange = (event) => {
@@ -146,20 +146,20 @@ class NotesCalendar {
     this.noteboardDay = 1;
 
     this.summary = document.createElement('input');
-    this.summary.setAttribute('id','note-board-summary');
+    this.summary.classList.add('note-board-summary');
 
     const infoButton = document.createElement('button');
-    infoButton.setAttribute('id', 'note-board-info-button');
+    infoButton.classList.add('note-board-info-button');
     infoButton.innerText = 'i';
     infoButton.onclick = () => this.toggleDetails();
 
     const editButton = document.createElement('button');
-    editButton.setAttribute('id', 'note-board-edit-button');
+    editButton.classList.add('note-board-edit-button');
     editButton.innerText = 's';
     editButton.onclick = () => this.editNotes();
 
     this.details = document.createElement('textarea');
-    this.details.setAttribute('id', 'note-board-details');
+    this.details.classList.add('note-board-details');
 
     this.noteboard.append(this.summary, infoButton, editButton, this.details);
   }
@@ -198,10 +198,11 @@ class NotesCalendar {
     const day = this.noteboardDay;
 
     const summary = this.summary.value;
+    const summaryTags = summary.split(',').map((e) => e.trim());
 
     const details = this.details.value;
 
-    this.saveNote(this.year, this.month, day, summary.split(',').map((e) => e.trim()), details);
+    this.saveNote(this.year, this.month, day, summaryTags, details);
   }
 
   saveNote(year, month, day, summary, details) {

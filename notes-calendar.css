@@ -1,4 +1,4 @@
-#notes-calendar * {
+#notes-calendar *, #notes-calendar-noboard * {
     border-collapse: collapse;
     td,
     th {
@@ -37,8 +37,8 @@
     background-color: #f8f8f8;
 }
 
-#note-board {
-    width: 300px;
+#note-board, .note-board-overlay {
+    max-width: 300px;
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #f8f8f8;
@@ -46,6 +46,7 @@
 
 .note-board-summary {
     width: 260px;
+    max-width: 260px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -63,10 +64,20 @@
 
 .note-board-details {
     width: 100%;
-    height: 150px;
+    /* height: 150px; */  /* better suited for static noteboard */
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #f8f8f8;
     resize: none;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.width50 {
+    width: 50%;
 }

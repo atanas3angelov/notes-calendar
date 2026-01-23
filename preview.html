@@ -48,19 +48,44 @@
                 };
                 notesCalendar.defineCallbackLoad(callbackLoad);
 
-                notesCalendar.createNoteBoard('note-board');
+                notesCalendar.createNoteBoard('note-board', false);
 
                 const callbackSave = (year, month, day, summary, details) => {
                     notes[day] = {summary: summary, details: details};
                     console.log(notes);
                 };
                 notesCalendar.defineCallbackSave(callbackSave);
+
+                // 2nd sample calendar without board
+                notesCalendarNoBoard = new NotesCalendar('notes-calendar-noboard', 2025, 12, notes)
+                const callbackLoad2 = (year, month) => {
+                    if (notes_db.has( id(year, month) )) {
+                        notes = notes_db.get( id(year, month) );
+                    } else {
+                        notes_db.set( id(year, month), {} );
+                        notes = notes_db.get( id(year, month) );
+                    }
+                    
+                    notesCalendarNoBoard.reloadCalendar(notes);
+                };
+                notesCalendarNoBoard.defineCallbackLoad(callbackLoad2);
+                notesCalendarNoBoard.defineCallbackSave(callbackSave);
             };
         </script>
 
         <h1>Notes Calendar Preview</h1>
-        <div id="notes-calendar"></div>
-        <br/>
-        <div id="note-board"></div>
+        <div class="flex">
+            <div class="width50">
+                <h2>Calendar with Board</h2>
+                <div id="notes-calendar"></div>
+                <br/>
+                <div id="note-board"></div>
+            </div>
+            <div class="width50">
+                <h2>Calendar without Board</h2>
+                <div id="notes-calendar-noboard"></div>
+            </div>
+        </div>
+
     </body>
 </html>

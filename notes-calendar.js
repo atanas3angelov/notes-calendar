@@ -11,6 +11,7 @@ class NotesCalendar {
     if (this.calendarDiv) {
 
       this.overlayBoard = true; // if user doesn't define a notesboard, an overlaid one need be created
+      this.isOverlayBoardVisible = false;
       this.detailsVisible = true;
       this.autoresizeBoard = true;  // influences only static board, overlay is always autoresizable
 
@@ -241,7 +242,10 @@ class NotesCalendar {
 
     this.toggleDetails();
 
-    this.noteboard.onmouseleave = () => this.noteboard.style.display = 'none';
+    this.noteboard.onmouseleave = () => {
+      this.noteboard.style.display = 'none';
+      this.isOverlayBoardVisible = false
+    }
   }
 
   showNotes(e, day) {
@@ -255,18 +259,30 @@ class NotesCalendar {
     // user did not provide a static noteboard, create an overlay one
     if (this.overlayBoard) {
 
-      let boundingRect = e.target.getBoundingClientRect();
+      if (this.noteboardDay == day && this.isOverlayBoardVisible) {
+        // showing notes for the same day should actually hide the overlay noteboard
 
-      if (this.noteboard) {
-        this.noteboard.style.display = 'block';
-        
+        this.noteboard.style.display = 'none';
+        this.isOverlayBoardVisible = false;
+
       } else {
-        this.createOverlayBoard();
+
+        let boundingRect = e.target.getBoundingClientRect();
+
+        if (this.noteboard) {
+          this.noteboard.style.display = 'block';
+          
+        } else {
+          this.createOverlayBoard();
+        }
+
+        // position bellow element from which event was initiated
+        this.noteboard.style.top = boundingRect.bottom + 'px';
+        this.noteboard.style.left = boundingRect.left + 'px';
+
+        this.isOverlayBoardVisible = true;
       }
 
-      // position bellow element from which event was initiated
-      this.noteboard.style.top = boundingRect.bottom + 'px';
-      this.noteboard.style.left = boundingRect.left + 'px';
     }
 
     this.noteboardDay = day;

@@ -52,6 +52,10 @@
 
                 const callbackSave = (year, month, day, summary, details) => {
                     notes[day] = {summary: summary, details: details};
+
+                    if (summary.join(', ') == '' && details == '') {
+                        delete notes[day];
+                    }
                     console.log(notes);
                 };
                 notesCalendar.defineCallbackSave(callbackSave);

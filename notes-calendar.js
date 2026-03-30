@@ -12,6 +12,7 @@ class NotesCalendar {
 
       this.overlayBoard = true; // if user doesn't define a notesboard, an overlaid one need be created
       this.isOverlayBoardVisible = false;
+      this.isOverlayCalendarSummaryVisible = false;
       this.detailsVisible = true;
       this.autoresizeBoard = true;  // influences only static board, overlay is always autoresizable
 
@@ -69,7 +70,25 @@ class NotesCalendar {
       this.loadCallback(this.year, this.month);
     };
 
-    calendarMenu.append(this.yearMenu, this.monthMenu);
+    this.summaryButton = document.createElement('button');
+    this.summaryButton.classList.add('notes-calendar-summary-button');
+    this.summaryButton.innerText = '+';
+    this.summaryButton.onclick = () => {
+      if (this.isOverlayCalendarSummaryVisible) {
+
+        this.summaryButton.innerText = '+';
+        this.isOverlayCalendarSummaryVisible = false;
+        this.hideCalendarSummary();
+
+      } else {
+
+        this.summaryButton.innerText = '-';
+        this.isOverlayCalendarSummaryVisible = true;
+        this.showCalendarSummary();
+      }
+    };
+
+    calendarMenu.append(this.yearMenu, this.monthMenu, this.summaryButton);
 
     return calendarMenu;
   }
@@ -339,7 +358,55 @@ class NotesCalendar {
     
     this.selectedCell.title = summary.join(', ');
 
+    if (this.isOverlayCalendarSummaryVisible) {
+      this.hideCalendarSummary();
+      this.showCalendarSummary();
+    }
+
     this.saveCallback(year, month, day, summary, details);
+  }
+
+  showCalendarSummary() {
+
+    this.calendarSummary = document.createElement('div');
+    this.calendarSummary.classList.add('calendar-summary-overlay');
+    
+    this.calendarSummary.style.display = 'block';
+    this.calendarSummary.style.position = 'absolute';
+
+    const table = document.createElement('table');
+    table.classList.add('calendar-summary');
+
+    // using sort in case notes are added out of order
+    // let sortedNotes = new Map([...Object.entries(this.notes)].sort());
+
+    for (let key in this.notes) {
+
+      let tr = document.createElement('tr');
+
+      let td = document.createElement('td');
+      td.textContent = key;
+      tr.append(td);
+
+      td = document.createElement('td');
+      td.textContent = this.notes[key].summary.join(', ');
+      tr.append(td);
+
+      table.appendChild(tr);
+    }
+
+    this.calendarSummary.append(table);
+
+    document.body.append(this.calendarSummary);
+
+    let boundingRect = this.calendarDiv.getBoundingClientRect();
+
+    this.calendarSummary.style.top = boundingRect.bottom + 'px';
+    this.calendarSummary.style.left = boundingRect.left + 'px';
+  }
+
+  hideCalendarSummary() {
+    this.calendarSummary.remove();
   }
 
   reloadCalendar(notes) {
@@ -351,6 +418,11 @@ class NotesCalendar {
     this.calendarDiv.replaceChild(
       this.createCalendar(this.year, this.month, this.notes), 
       this.calendarDiv.children[1]);
+    
+    if (this.isOverlayCalendarSummaryVisible) {
+      this.hideCalendarSummary();
+      this.showCalendarSummary();
+    }
   }
 
   /**

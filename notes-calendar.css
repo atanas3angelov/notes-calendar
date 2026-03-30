@@ -32,7 +32,12 @@
 }
 .notes-calendar-year,
 .notes-calendar-month {
-    width: 130px;
+    width: 120px;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+}
+.notes-calendar-summary-button {
+    width: 20px;
     box-sizing: border-box;
     background-color: #f8f8f8;
 }
@@ -70,6 +75,22 @@
     border-radius: 4px;
     background-color: #f8f8f8;
     resize: none;
+}
+
+.calendar-summary-overlay {
+    background-color: #f8f8f8;
+}
+
+.calendar-summary {
+    border-collapse: collapse;
+    border: 1px solid black;
+    padding: 3px;
+}
+.calendar-summary tr{
+    border-bottom: 1px solid black;
+}
+.calendar-summary td{
+    padding-right: 10px;
 }
 
 .flex {

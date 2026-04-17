@@ -51,14 +51,27 @@
                 notesCalendar.createNoteBoard('note-board', false);
 
                 const callbackSave = (year, month, day, summary, details) => {
+                    if (notes_db.has( id(year, month) )) {
+                        notes = notes_db.get( id(year, month) );
+                    } else {
+                        notes_db.set( id(year, month), {} );
+                        notes = notes_db.get( id(year, month) );
+                    }
                     notes[day] = {summary: summary, details: details};
 
                     if (summary.join(', ') == '' && details == '') {
                         delete notes[day];
                     }
-                    console.log(notes);
+                    console.log(notes_db.get(id(year, month)));
                 };
                 notesCalendar.defineCallbackSave(callbackSave);
+
+                const callbackImportSave = (year, month, notes) => {
+                    notes_db.set(id(year, month), notes);
+
+                    console.log(notes_db.get(id(year, month)));
+                };
+                notesCalendar.defineCallbackImportSave(callbackImportSave);
 
                 // 2nd sample calendar without board
                 notesCalendarNoBoard = new NotesCalendar('notes-calendar-noboard', 2025, 12, notes)
@@ -74,6 +87,7 @@
                 };
                 notesCalendarNoBoard.defineCallbackLoad(callbackLoad2);
                 notesCalendarNoBoard.defineCallbackSave(callbackSave);
+                notesCalendarNoBoard.defineCallbackImportSave(callbackImportSave);
             };
         </script>
 

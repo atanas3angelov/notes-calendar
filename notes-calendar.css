@@ -32,11 +32,17 @@
 }
 .notes-calendar-year,
 .notes-calendar-month {
-    width: 120px;
+    width: 110px;
     box-sizing: border-box;
     background-color: #f8f8f8;
 }
 .notes-calendar-summary-button {
+    width: 20px;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+}
+
+.notes-calendar-settings-button {
     width: 20px;
     box-sizing: border-box;
     background-color: #f8f8f8;
@@ -91,6 +97,12 @@
 }
 .calendar-summary td{
     padding-right: 10px;
+}
+
+.calendar-settings-item {
+    background-color: #f8f8f8;
+    border: 1px solid black;
+    padding: 3px;
 }
 
 .flex {

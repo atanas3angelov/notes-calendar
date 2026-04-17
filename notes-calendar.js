@@ -13,6 +13,7 @@ class NotesCalendar {
       this.overlayBoard = true; // if user doesn't define a notesboard, an overlaid one need be created
       this.isOverlayBoardVisible = false;
       this.isOverlayCalendarSummaryVisible = false;
+      this.isSettingsVisible = false;
       this.detailsVisible = true;
       this.autoresizeBoard = true;  // influences only static board, overlay is always autoresizable
 
@@ -76,19 +77,29 @@ class NotesCalendar {
     this.summaryButton.onclick = () => {
       if (this.isOverlayCalendarSummaryVisible) {
 
-        this.summaryButton.innerText = '+';
-        this.isOverlayCalendarSummaryVisible = false;
         this.hideCalendarSummary();
 
       } else {
 
-        this.summaryButton.innerText = '-';
-        this.isOverlayCalendarSummaryVisible = true;
         this.showCalendarSummary();
       }
     };
 
-    calendarMenu.append(this.yearMenu, this.monthMenu, this.summaryButton);
+    this.settingsButton = document.createElement('button');
+    this.settingsButton.classList.add('notes-calendar-settings-button');
+    this.settingsButton.innerText = '*';
+    this.settingsButton.onclick = () => {
+      if (this.isSettingsVisible) {
+
+        this.hideSettings();
+
+      } else {
+
+        this.showSettings();
+      }
+    };
+
+    calendarMenu.append(this.yearMenu, this.monthMenu, this.summaryButton, this.settingsButton);
 
     return calendarMenu;
   }
@@ -203,6 +214,10 @@ class NotesCalendar {
 
     this.summary = document.createElement('input');
     this.summary.classList.add('note-board-summary');
+    this.summary.onkeydown = (event) => {
+      if (event.code == 'Enter')
+        this.editNotes();
+    };
 
     if (this.autoresizeBoard || this.overlayBoard)
       this.summary.oninput = () => this.adjustBoardWidth();
@@ -219,6 +234,10 @@ class NotesCalendar {
 
     this.details = document.createElement('textarea');
     this.details.classList.add('note-board-details');
+    this.details.onkeydown = (event) => {
+      if (event.code == 'Enter')
+        this.editNotes();
+    }
 
     if (this.autoresizeBoard || this.overlayBoard)
       this.details.oninput = () => this.adjustBoardWidth();
@@ -262,8 +281,7 @@ class NotesCalendar {
     this.toggleDetails();
 
     this.noteboard.onmouseleave = () => {
-      this.noteboard.style.display = 'none';
-      this.isOverlayBoardVisible = false
+      this.hideOverlayBoard();
     }
   }
 
@@ -281,15 +299,14 @@ class NotesCalendar {
       if (this.noteboardDay == day && this.isOverlayBoardVisible) {
         // showing notes for the same day should actually hide the overlay noteboard
 
-        this.noteboard.style.display = 'none';
-        this.isOverlayBoardVisible = false;
+        this.hideOverlayBoard();
 
       } else {
 
         let boundingRect = e.target.getBoundingClientRect();
 
         if (this.noteboard) {
-          this.noteboard.style.display = 'block';
+          this.showOverlayBoard();
           
         } else {
           this.createOverlayBoard();
@@ -329,6 +346,16 @@ class NotesCalendar {
         this.adjustBoardWidth();
   }
 
+  showOverlayBoard() {
+    this.noteboard.style.display = 'block';
+    this.isOverlayBoardVisible = true;
+  }
+
+  hideOverlayBoard() {
+    this.noteboard.style.display = 'none';
+    this.isOverlayBoardVisible = false;
+  }
+
   editNotes() {
     
     const day = this.noteboardDay;
@@ -339,7 +366,7 @@ class NotesCalendar {
     const details = this.details.value;
 
     if (this.overlayBoard) {
-      this.noteboard.style.display = 'none';
+      this.hideOverlayBoard();
     }
 
     this.saveNote(this.year, this.month, day, summaryTags, details);
@@ -367,6 +394,9 @@ class NotesCalendar {
   }
 
   showCalendarSummary() {
+
+    this.summaryButton.innerText = '-';
+    this.isOverlayCalendarSummaryVisible = true;
 
     this.calendarSummary = document.createElement('div');
     this.calendarSummary.classList.add('calendar-summary-overlay');
@@ -406,7 +436,92 @@ class NotesCalendar {
   }
 
   hideCalendarSummary() {
+    this.summaryButton.innerText = '+';
+    this.isOverlayCalendarSummaryVisible = false;
     this.calendarSummary.remove();
+  }
+
+  showSettings() {
+    
+    this.isSettingsVisible = true;
+
+    this.settings = document.createElement('div');
+    this.settings.classList.add('calendar-settings-overlay');
+    
+    this.settings.style.display = 'block';
+    this.settings.style.position = 'absolute';
+
+    this.exportButton = document.createElement('div');
+    this.exportButton.style.display = 'block';
+    this.exportButton.classList.add('calendar-settings-item');
+    this.exportButton.innerText = 'Export month';
+    this.exportButton.onclick = () => {
+      
+      const filename = `${this.year}-${this.month} notes calendar.json`;
+      const content = {'year': this.year, 'month': this.month, 'notes': this.notes};
+      this.saveAs(filename, JSON.stringify(content));
+
+      this.hideSettings();
+    };
+
+    this.importButton = document.createElement('div');
+    this.importButton.style.display = 'block';
+    this.importButton.classList.add('calendar-settings-item');
+    this.importButton.innerText = 'Import month';
+    this.importButton.onclick = () => {
+      
+      const input = document.createElement('input');
+      input.type = 'file';
+
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+
+        const fileReader = new FileReader();
+        fileReader.readAsText(file, 'utf-8');
+
+        fileReader.onload = readerEvent => {
+          const content = readerEvent.target.result;
+
+          const data = JSON.parse(content);
+          this.yearMenu.value = this.year = data['year'];
+          this.monthMenu.value = this.month = data['month'];
+          this.notes = data['notes'];
+
+          this.reloadCalendar(this.notes);
+
+          if (this.importSaveCallback) {
+            this.importSaveCallback(this.year, this.month, this.notes);
+          }
+        }
+
+      };
+
+      input.click();
+
+      this.hideSettings();
+    };
+
+    this.settings.append(this.exportButton);
+    this.settings.append(this.importButton);
+
+    document.body.append(this.settings);
+
+    let boundingRect = this.settingsButton.getBoundingClientRect();
+
+    this.settings.style.top = boundingRect.bottom + 'px';
+    this.settings.style.left = boundingRect.left + 'px';
+  }
+
+  hideSettings() {
+    this.isSettingsVisible = false;
+    this.settings.remove();
+  }
+
+  saveAs(filename, text) {
+    const link = document.createElement('a');
+    link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    link.setAttribute('download', filename);
+    link.click();
   }
 
   reloadCalendar(notes) {
@@ -448,4 +563,17 @@ class NotesCalendar {
     this.saveCallback = func;
   }
 
+  /**
+   * This function will be triggered after importing notes from a file.
+   * Use it in order to save the newly imported notes for the month of the specified year 
+   * to your storage (db?).
+   * The func is expected to have 3 params: year, month, notes.
+   * The year and month are expected to be numbers.
+   * The notes parameter is an object, where each field has the format:
+   *    day number: { summary: ["tag 1", "tag 2"...], details: "details text" }.
+   * @param {*} func 
+   */
+  defineCallbackImportSave(func) {
+    this.importSaveCallback = func;
+  }
 }

@@ -531,7 +531,7 @@ class NotesCalendar {
      */
     this.notes = notes;
     this.calendarDiv.replaceChild(
-      this.createCalendar(this.year, this.month, this.notes), 
+      this.createCalendar(), 
       this.calendarDiv.children[1]);
     
     if (this.isOverlayCalendarSummaryVisible) {

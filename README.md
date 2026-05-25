@@ -87,11 +87,11 @@ notesCalendar.createNoteBoard('note-board', false);
 Howerver, if such space (+id) is not provided, then the NotesCalendar will automatically use an "Overlay Board" making an overlay Noteboard appear just below the selected day. That makes the NotesCalendar self-sufficient in terms of the space on the page it requires for its interactivity - the recommended way of using NotesCalendar.
 
 > [!NOTE]  
-> Behind the scene a div with a <u>class</u> "note-board-overlay" is created for the Overlayboard. This info should serve so that you can provide custom styling to it. Note that it is a class and not an id.
+> Behind the scene a div with a <u>class</u> "note-board-overlay" is created for the Overlay Board. This info should serve so that you can provide custom styling to it. Note that it is a class and not an id.
 
 2. Calendar Summary
 
-There's a button ("+") that brings down an overlayed legend (the "Calendar Summary") below the calendar with all the tagged days and their tags (the details section is not included). After expansion the button's text is changed to "-" and it can be used to hide the Calendar Summary. The calendar summary is useful since one doesn't need to hover over each individual day in order to see the tags associated with it.
+There's a button ("+") that brings down an overlayed legend (the "Calendar Summary") below the calendar with all the tagged days and their tags (the details section is not included). After expansion the button's text is changed to "-" and it can be used to hide the Calendar Summary. The Calendar Summary is useful since one doesn't need to hover over each individual day in order to see the tags associated with it.
 
 3. Settings
 

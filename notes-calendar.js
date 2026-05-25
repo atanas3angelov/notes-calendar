@@ -235,8 +235,12 @@ class NotesCalendar {
     this.details = document.createElement('textarea');
     this.details.classList.add('note-board-details');
     this.details.onkeydown = (event) => {
-      if (event.code == 'Enter')
-        this.editNotes();
+      if (event.code == 'Enter') {
+        if (event.shiftKey) {
+        } else {
+          this.editNotes();
+        }
+      }
     }
 
     if (this.autoresizeBoard || this.overlayBoard)

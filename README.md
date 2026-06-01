@@ -97,6 +97,9 @@ There's a button ("+") that brings down an overlayed legend (the "Calendar Summa
 
 There's a button ("*") that brings down an overlayed list of additional interactivity (the "Settings Menu") so that the main functionality preserves its simplicity and unobstrusive nature. Additional interactivity is listed below.
 
+   * Now  
+   Sets the calendar to the current month. It also loads the notes for it through the "callbackLoad" function.
+
    * Export / Import  
     NotesCalendar requires a Backend service to save/load the notes for the days of the month. However, it also allows the notes for the current month to be exported into a JSON file and subsequently imported. This might be useful in cases when the Backend service is (temporary) unavailable. One more callback (aside of the 2 main to load notes for the month and save notes for a specific day) needs to be defined, in order to save the newly imported notes for the month to a persistent source on the Backend.
 

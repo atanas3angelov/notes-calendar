@@ -455,6 +455,19 @@ class NotesCalendar {
     this.settings.style.display = 'block';
     this.settings.style.position = 'absolute';
 
+    this.nowButton = document.createElement('div');
+    this.nowButton.style.display = 'block';
+    this.nowButton.classList.add('calendar-settings-item');
+    this.nowButton.innerText = 'Now';
+    this.nowButton.onclick = () => {
+      const now = new Date();
+      this.yearMenu.value = this.year = now.getFullYear();
+      this.monthMenu.value = this.month = now.getMonth() + 1;
+      this.loadCallback(this.year, this.month);
+
+      this.hideSettings();
+    };
+
     this.exportButton = document.createElement('div');
     this.exportButton.style.display = 'block';
     this.exportButton.classList.add('calendar-settings-item');
@@ -505,6 +518,7 @@ class NotesCalendar {
       this.hideSettings();
     };
 
+    this.settings.append(this.nowButton);
     this.settings.append(this.exportButton);
     this.settings.append(this.importButton);
 
